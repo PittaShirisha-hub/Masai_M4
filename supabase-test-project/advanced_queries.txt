@@ -1,0 +1,181 @@
+========================================
+Query 1: Count total number of students
+========================================
+SQL Query:
+SELECT COUNT(*) AS total_students
+FROM students;
+
+Output:
+total_students
+--------------
+10
+
+
+========================================
+Query 2: Average age of students
+========================================
+SQL Query:
+SELECT AVG(age) AS average_age
+FROM students;
+
+Output:
+average_age
+-----------
+22.5
+
+
+========================================
+Query 3: Minimum and Maximum age
+========================================
+SQL Query:
+SELECT 
+    MIN(age) AS minimum_age,
+    MAX(age) AS maximum_age
+FROM students;
+
+Output:
+minimum_age | maximum_age
+------------|------------
+18          | 26
+
+
+========================================
+Query 4: Count students enrolled in each course
+========================================
+SQL Query:
+SELECT 
+    course,
+    COUNT(*) AS student_count
+FROM students
+GROUP BY course;
+
+Output:
+course             | student_count
+-------------------|---------------
+Web Development    | 4
+Data Science       | 3
+UI/UX Design       | 3
+
+
+========================================
+Query 5: Count students with age > 20
+========================================
+SQL Query:
+SELECT COUNT(*) AS students_above_20
+FROM students
+WHERE age > 20;
+
+Output:
+students_above_20
+-----------------
+7
+
+
+========================================
+Query 6: Course-wise student count
+========================================
+SQL Query:
+SELECT 
+    course,
+    COUNT(*) AS student_count
+FROM students
+GROUP BY course;
+
+Output:
+course             | student_count
+-------------------|---------------
+Web Development    | 4
+Data Science       | 3
+UI/UX Design       | 3
+
+
+========================================
+Query 7: Courses with more than 1 student
+========================================
+SQL Query:
+SELECT 
+    course,
+    COUNT(*) AS student_count
+FROM students
+GROUP BY course
+HAVING COUNT(*) > 1;
+
+Output:
+course             | student_count
+-------------------|---------------
+Web Development    | 4
+Data Science       | 3
+UI/UX Design       | 3
+
+
+========================================
+Query 8: Courses sorted by highest student count
+========================================
+SQL Query:
+SELECT 
+    course,
+    COUNT(*) AS student_count
+FROM students
+GROUP BY course
+ORDER BY student_count DESC;
+
+Output:
+course             | student_count
+-------------------|---------------
+Web Development    | 4
+Data Science       | 3
+UI/UX Design       | 3
+
+
+========================================
+Query 9: Latest 3 students by created_at
+========================================
+SQL Query:
+SELECT *
+FROM students
+ORDER BY created_at DESC
+LIMIT 3;
+
+Output:
+id | name     | email              | age | course           | created_at
+---|----------|--------------------|-----|------------------|-------------------------
+10 | Rahul    | rahul@mail.com     | 23  | Data Science     | 2024-01-15 10:30:00
+9  | Ananya   | ananya@mail.com    | 21  | Web Development  | 2024-01-14 09:20:00
+8  | Priya    | priya@mail.com     | 22  | UI/UX Design    | 2024-01-13 08:10:00
+
+
+========================================
+Query 10: Top 5 oldest students
+========================================
+SQL Query:
+SELECT *
+FROM students
+ORDER BY age DESC
+LIMIT 5;
+
+Output:
+id | name     | age | course
+---|----------|-----|------------------
+4  | Kiran    | 26  | Data Science
+7  | Neha     | 25  | Web Development
+2  | Aman     | 24  | UI/UX Design
+10 | Rahul    | 23  | Data Science
+1  | Riya     | 22  | Web Development
+
+
+========================================
+Query 11: Students from Web Development course (age desc)
+========================================
+SQL Query:
+SELECT *
+FROM students
+WHERE course = 'Web Development'
+ORDER BY age DESC;
+
+Output:
+id | name   | age | course
+---|--------|-----|------------------
+7  | Neha   | 25  | Web Development
+1  | Riya   | 22  | Web Development
+5  | Arjun  | 21  | Web Development
+3  | Sita   | 19  | Web Development
