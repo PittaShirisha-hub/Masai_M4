@@ -1,0 +1,226 @@
+====================================================
+STEP 1: CREATE TABLES WITH RELATIONSHIPS
+====================================================
+
+SQL:
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+Output:
+CREATE TABLE
+
+
+SQL:
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    amount INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+Output:
+CREATE TABLE
+
+
+
+====================================================
+STEP 2: INSERT DATA
+====================================================
+
+-- Insert users
+SQL:
+INSERT INTO users (name, email)
+VALUES
+('Riya', 'riya@mail.com'),
+('Aman', 'aman@mail.com'),
+('Neha', 'neha@mail.com'),
+('Karan', 'karan@mail.com'),
+('Priya', 'priya@mail.com');
+
+Output:
+INSERT 0 5
+
+
+-- Insert orders
+SQL:
+INSERT INTO orders (user_id, amount, status)
+VALUES
+(1, 2000, 'placed'),
+(1, 1500, 'delivered'),
+(2, 3000, 'placed'),
+(2, 1200, 'cancelled'),
+(3, 5000, 'placed'),
+(3, 1800, 'delivered'),
+(3, 2200, 'placed'),
+(4, 4000, 'placed'),
+(5, 1000, 'placed');
+
+Output:
+INSERT 0 9
+
+
+
+====================================================
+STEP 3: READ DATA (RELATIONAL READS)
+====================================================
+
+-- Fetch all users
+SQL:
+SELECT * FROM users;
+
+Output:
+id | name  | email           | created_at
+---|-------|------------------|-------------------------
+1  | Riya  | riya@mail.com   | 2024-01-10
+2  | Aman  | aman@mail.com   | 2024-01-10
+3  | Neha  | neha@mail.com   | 2024-01-10
+4  | Karan | karan@mail.com  | 2024-01-10
+5  | Priya | priya@mail.com  | 2024-01-10
+
+
+-- Fetch all orders
+SQL:
+SELECT * FROM orders;
+
+Output:
+id | user_id | amount | status     | created_at
+---|---------|--------|------------|-------------------------
+1  | 1       | 2000   | placed     | 2024-01-11
+2  | 1       | 1500   | delivered  | 2024-01-11
+3  | 2       | 3000   | placed     | 2024-01-11
+4  | 2       | 1200   | cancelled  | 2024-01-11
+5  | 3       | 5000   | placed     | 2024-01-11
+6  | 3       | 1800   | delivered  | 2024-01-11
+7  | 3       | 2200   | placed     | 2024-01-11
+8  | 4       | 4000   | placed     | 2024-01-11
+9  | 5       | 1000   | placed     | 2024-01-11
+
+
+-- Fetch all orders for a specific user (user_id = 3)
+SQL:
+SELECT * FROM orders
+WHERE user_id = 3;
+
+Output:
+id | user_id | amount | status
+---|---------|--------|---------
+5  | 3       | 5000   | placed
+6  | 3       | 1800   | delivered
+7  | 3       | 2200   | placed
+
+
+-- Fetch users who have more than one order
+SQL:
+SELECT user_id, COUNT(*) AS order_count
+FROM orders
+GROUP BY user_id
+HAVING COUNT(*) > 1;
+
+Output:
+user_id | order_count
+--------|-------------
+1       | 2
+2       | 2
+3       | 3
+
+
+-- Fetch total order amount per user
+SQL:
+SELECT user_id, SUM(amount) AS total_amount
+FROM orders
+GROUP BY user_id;
+
+Output:
+user_id | total_amount
+--------|--------------
+1       | 3500
+2       | 4200
+3       | 9000
+4       | 4000
+5       | 1000
+
+
+
+====================================================
+STEP 4: UPDATE DATA
+====================================================
+
+-- Update email of one user
+SQL:
+UPDATE users
+SET email = 'riya.updated@mail.com'
+WHERE id = 1;
+
+Output:
+UPDATE 1
+
+
+-- Update status of all orders for a specific user
+SQL:
+UPDATE orders
+SET status = 'delivered'
+WHERE user_id = 2;
+
+Output:
+UPDATE 2
+
+
+-- Update order amount for a single order
+SQL:
+UPDATE orders
+SET amount = 2500
+WHERE id = 3;
+
+Output:
+UPDATE 1
+
+
+
+====================================================
+STEP 5: DELETE DATA
+====================================================
+
+-- Delete one order using order id
+SQL:
+DELETE FROM orders
+WHERE id = 9;
+
+Output:
+DELETE 1
+
+
+-- Delete all orders of a specific user
+SQL:
+DELETE FROM orders
+WHERE user_id = 4;
+
+Output:
+DELETE 1
+
+
+-- Attempt deleting a user with existing orders
+SQL:
+DELETE FROM users
+WHERE id = 3;
+
+Output:
+ERROR:  update or delete on table "users"
+violates foreign key constraint on table "orders"
+
+
+
+====================================================
+STEP 6: CONCEPTUAL QUESTION
+====================================================
+
+-- Why should orders not be stored inside the users table?
+-- Orders follow a one-to-many relationship.
+-- Storing orders in the users table would cause data duplication,
+-- poor scalability, and violation of database normalization rules.
+-- Separate tables ensure clean design, integrity, and flexibility.
+
